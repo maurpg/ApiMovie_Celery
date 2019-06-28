@@ -1,0 +1,22 @@
+<html>
+<head>
+</head>
+
+<body>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <div class="fadeIn first">
+      <img src="/media/images/login.png" id="icon" alt="" />
+    </div>
+
+    <!-- Login Form -->
+    <form method="POST">
+      	{% csrf_token %}
+		{{form.as_p}}
+      <input type="submit" class="fadeIn fourth" value="Search">
+
+    </form>
+  </div>
+</div>
+</body>
+</html>
