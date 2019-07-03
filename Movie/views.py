@@ -1,3 +1,4 @@
+from celery import group
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -18,10 +19,17 @@ class Search(View):
         form_search = SearchMovie(request.POST)
         if form_search.is_valid():
             type = form_search.cleaned_data['search_for']
-            value = form_search.cleaned_data['search']
+            value = form_search.cleaned_data['search'].split(';')
             email = form_search.cleaned_data['email']
-            result = get_movie.delay(type , value)
-            send_email_to_user.delay(email)
+
+            list_task = []
+            for value in value:
+                list_task.append(get_movie.s(type , value))
+            result = group(list_task).delay()
+
+
+            #result = get_movie.delay(type , value)
+            #send_email_to_user.delay(email)
             print(result.ready())
             return HttpResponse(result)
 
